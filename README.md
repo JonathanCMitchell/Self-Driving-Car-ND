@@ -19,4 +19,4 @@ In this project you we detect lane lines in images using Python and OpenCV.  Ope
 alt="Watch Video Here" width="240" height="180" border="10" /></a>
 
 
-[![Watch video here](http://img.youtube.com/vi/Ha090kb7ZkI/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+[![Watch video here](http://img.youtube.com/vi/Ha090kb7ZkI/0.jpg)](http://www.youtube.com/watch?v=Ha090kb7ZkI)
