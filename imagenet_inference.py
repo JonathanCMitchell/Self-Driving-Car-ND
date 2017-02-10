@@ -6,7 +6,6 @@ from scipy.misc import imread
 from caffe_classes import class_names
 from alexnet import AlexNet
 
-
 # placeholders
 x = tf.placeholder(tf.float32, (None, 227, 227, 3))
 
@@ -14,7 +13,7 @@ x = tf.placeholder(tf.float32, (None, 227, 227, 3))
 # we indicate to keep the 1000 class final layer
 # originally used to train on ImageNet.
 probs = AlexNet(x, feature_extract=False)
-init = tf.global_variables_initializer()
+init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
@@ -31,6 +30,7 @@ output = sess.run(probs, feed_dict={x: [im1, im2]})
 
 # Print Output
 for input_im_ind in range(output.shape[0]):
+    print('output: ', output)
     inds = np.argsort(output)[input_im_ind, :]
     print("Image", input_im_ind)
     for i in range(5):

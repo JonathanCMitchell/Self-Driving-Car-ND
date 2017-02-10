@@ -3,7 +3,11 @@ import tensorflow as tf
 
 net_data = np.load("bvlc-alexnet.npy", encoding="latin1").item()
 
-
+print('size of fc7 weights: ', net_data['fc7'][0].shape)
+print('size of fc7 biases: ', net_data['fc7'][1].shape)
+print('size of weights net_data[fc8][0] : ' , net_data['fc8'][0].shape)
+print('size of bias  net_data[fc8][1] : ' , net_data['fc8'][1].shape)
+# print('net_data: ', net_data)
 def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group=1):
     '''
     From https://github.com/ethereon/caffe-tensorflow
@@ -146,13 +150,14 @@ def AlexNet(features, feature_extract=False):
     fc7b = tf.Variable(net_data["fc7"][1])
     fc7 = tf.nn.relu_layer(fc6, fc7W, fc7b)
 
+    # Returns fully connected Layer 7 if feature_extract set to true
     if feature_extract:
         return fc7
 
     # fc8
     # fc(1000, relu=False, name='fc8')
-    fc8W = tf.Variable(net_data["fc8"][0])
-    fc8b = tf.Variable(net_data["fc8"][1])
+    fc8W = tf.Variable(net_data["fc8"][0]) # [4096] weights list
+    fc8b = tf.Variable(net_data["fc8"][1]) # [1000] labels list
 
     logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
     probabilities = tf.nn.softmax(logits)

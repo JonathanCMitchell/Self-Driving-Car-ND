@@ -3,3 +3,12 @@ __pycache__
 bvlc-alexnet.npy
 train.p
 .vscode
+
+new-net-epoch10
+new-net-epoch10.meta
+*.meta
+feature-extraction-network
+feature-extraction-network-E10
+feature-extraction-network-E10.meta
+.idea*
+/checkpoint

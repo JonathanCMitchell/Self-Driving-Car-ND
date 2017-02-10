@@ -10,14 +10,15 @@ from scipy.misc import imread
 from caffe_classes import class_names
 from alexnet import AlexNet
 
+
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 # TODO: Resize the images so they can be fed into AlexNet.
 # HINT: Use `tf.image.resize_images` to resize the images
-resized = ...
+resized = tf.image.resize_images(x, (227, 227), tf.image.ResizeMethod.NEAREST_NEIGHBOR)
 
 probs = AlexNet(resized)
 
-init = tf.global_variables_initializer()
+init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
@@ -25,6 +26,7 @@ sess.run(init)
 im1 = imread("construction.jpg").astype(np.float32)
 im1 = im1 - np.mean(im1)
 
+print('im1 shape :', im1.shape)
 im2 = imread("stop.jpg").astype(np.float32)
 im2 = im2 - np.mean(im2)
 
