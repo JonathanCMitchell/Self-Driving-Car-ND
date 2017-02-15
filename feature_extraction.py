@@ -10,10 +10,23 @@ FLAGS = flags.FLAGS
 
 # command line flags
 # CIFAR 10 classification set:
-flags.DEFINE_string('training_file', 'vgg_cifar10_100_bottleneck_features_train.p',
+# VGG
+# flags.DEFINE_string('training_file', 'vgg_cifar10_100_bottleneck_features_train.p',
+#                     "Bottleneck features training file (.p)")
+# flags.DEFINE_string('validation_file', 'vgg_cifar10_bottleneck_features_validation.p',
+#                     "Bottleneck features validation file (.p)")
+
+# Resnet
+flags.DEFINE_string('training_file', "resnet_cifar10_100_bottleneck_features_train.p",
                     "Bottleneck features training file (.p)")
-flags.DEFINE_string('validation_file', 'vgg_cifar10_bottleneck_features_validation.p',
+flags.DEFINE_string('validation_file', "resnet_cifar10_bottleneck_features_validation.p",
                     "Bottleneck features validation file (.p)")
+# Inception
+# flags.DEFINE_string('training_file', 'inception_cifar10_100_bottleneck_features_train.p',
+#                     "Bottleneck features training file (.p)")
+#
+# flags.DEFINE_string('validation_file', 'inception_cifar10_100_bottleneck_features_validation.p', \
+#                     "Bottleneck features validation file (.p)")
 
 # Traffic Sign classification set:
 # flags.DEFINE_string('training_file', 'vgg_traffic_100_bottleneck_features_train.p',
@@ -24,7 +37,7 @@ flags.DEFINE_string('validation_file', 'vgg_cifar10_bottleneck_features_validati
 
 
 
-flags.DEFINE_integer('epochs', 10, 'The number of epochs')
+flags.DEFINE_integer('epochs', 50, 'The number of epochs')
 flags.DEFINE_integer('learning_rate', 0.001, 'The learning rate of the gradient descent optimizer')
 flags.DEFINE_integer('batch_size', 256, 'The batch size for gradient descent updates')
 
@@ -44,15 +57,16 @@ def load_bottleneck_data(training_file, validation_file):
     print("Training file: ", training_file)
     print("Validation file: ", validation_file)
 
-    with open(training_file, 'rb') as f:
-        train_data = pickle.load(f)
-    with open(validation_file, 'rb') as f:
-        validation_data = pickle.load(f)
+    with open(training_file, 'rb') as t:
+        train_data = pickle.load(t)
+    with open(validation_file, 'rb') as t:
+        validation_data = pickle.load(t)
 
     X_train = train_data['features']
     y_train = train_data['labels']
     X_val = validation_data['features']
     y_val = validation_data['labels']
+    print('X_train shape: ', X_train.shape)
 
     return X_train, y_train, X_val, y_val
 
@@ -61,8 +75,10 @@ def main(_):
     # load bottleneck data
 
 
+    print('before load bottleneck')
     X_train, y_train, X_val, y_val = load_bottleneck_data(FLAGS.training_file, FLAGS.validation_file)
 
+    print('after load bottleneck')
     X_normalized, y_one_hot = preprocess_data(X_train, y_train)
     X_val_normalized, y_val_one_hot = preprocess_data(X_val, y_val)
 
@@ -78,22 +94,12 @@ def main(_):
     print('X_val.shape: ', y_train.shape)
 
 
-    # nb_classes = 10 for CIFAR, 43 for TrafficSign
     nb_classes = len(np.unique(y_train))
 
     input = Input(shape=X_train.shape[1:])
     x = Flatten()(input)
     x = Dense(nb_classes, activation='softmax')(x)
     model = Model(input=input, output=x)
-
-    # TODO: define your model and hyperparams here
-
-
-
-
-
-
-    # TODO: train your model here
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     # Train model
